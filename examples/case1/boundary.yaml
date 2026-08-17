@@ -1,0 +1,15 @@
+B1:
+  condition: flux
+  args: 0
+
+B2:
+  condition: temp
+  args: 50
+
+B3:
+  condition: temp
+  args: 50
+
+B4:
+  condition: temp
+  args: 0

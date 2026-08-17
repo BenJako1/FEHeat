@@ -1,0 +1,2 @@
+[console_scripts]
+feheat = feheat.cli:main

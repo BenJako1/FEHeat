@@ -1,0 +1,23 @@
+z_minus:
+  condition: flux
+  args: 0
+
+z_plus:
+  condition: flux
+  args: 0
+
+y_minus:
+  condition: temp
+  args: 0
+
+y_plus:
+  condition: flux
+  args: 0
+
+x_minus:
+  condition: temp
+  args: 0
+
+x_plus:
+  condition: temp
+  args: 100
