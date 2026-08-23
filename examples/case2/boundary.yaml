@@ -1,13 +1,13 @@
 z_minus:
-  condition: flux
-  args: 0
+  condition: temp
+  args: 100
 
 z_plus:
-  condition: flux
-  args: 0
+  condition: conv
+  args: [5, 30]
 
 y_minus:
-  condition: temp
+  condition: flux
   args: 0
 
 y_plus:
@@ -15,9 +15,9 @@ y_plus:
   args: 0
 
 x_minus:
-  condition: temp
+  condition: flux
   args: 0
 
 x_plus:
-  condition: temp
-  args: 100
+  condition: flux
+  args: 0

@@ -39,6 +39,7 @@ def apply_temperature(T, Q, K, mesh, properties, bc):
 
 def apply_flux(T, Q, K, mesh, properties, bc):
     nodes = mesh.physical_groups[bc.boundary]["elements"]
+    q = bc.args[0]
 
     if len(bc.args) != 1:
         raise ValueError(f"Flux condition on boundary {bc.boundary} takes only one argument!")
@@ -46,14 +47,41 @@ def apply_flux(T, Q, K, mesh, properties, bc):
     for face in nodes:
         type = mesh.physical_groups[bc.boundary]["type"]
         if type == "T3":
-            coefficient = np.ones(3) * tri_area(mesh.nodes[face]) / 3
+            f = q * tri_area(mesh.nodes[face]) * np.ones(3) / 3
         elif type == "L2":
-            coefficient = np.ones(2) * properties["t"] * edge_length(mesh.nodes[face]) / 2
-        Q[nodes] += bc.args[0] * coefficient
+            f = q * properties["t"] * edge_length(mesh.nodes[face]) * np.ones(2) / 2
+
+        Q[nodes] += f
+
+def apply_convection(T, Q, K, mesh, properties, bc):
+    nodes = mesh.physical_groups[bc.boundary]["elements"]
+    print(bc.args)
+    h, T_inf = bc.args
+    
+    if len(bc.args) != 2:
+        raise ValueError(f"Convection condition on boundary {bc.boundary} takes two arguments!")
+
+    for face in nodes:
+        type = mesh.physical_groups[bc.boundary]["type"]
+        if type == "T3":
+            A = tri_area(mesh.nodes[face])
+            f = h * T_inf * A * np.ones(3) / 3
+            k = (h * A / 12) * np.array([[2, 1, 1],
+                                         [1, 2, 1],
+                                         [1, 1, 2]])
+        elif type == "L2":
+            A = properties["t"] * edge_length(mesh.nodes[face])
+            f = h * T_inf * A * np.ones(2) / 2
+            k = (h * A / 6) * np.array([[2, 1],
+                                        [1, 2]])
+
+        Q[nodes] += f
+        K[np.ix_(face, face)] += k
 
 BOUNDARY_CONDITIONS = {
     "temp": apply_temperature,
-    "flux": apply_flux
+    "flux": apply_flux,
+    "conv": apply_convection
 }
 
 def apply_boundary_condition(T, Q, K, mesh, properties, bc):
