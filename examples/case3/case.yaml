@@ -1,0 +1,10 @@
+mesh: mesh.msh
+properties: properties.yaml
+boundary_conditions: boundary.yaml
+
+element:
+  type: TET4
+
+results:
+  format: vtu
+  filename: results

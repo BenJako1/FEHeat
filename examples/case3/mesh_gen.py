@@ -101,6 +101,13 @@ body2 = gmsh.model.geo.addVolume([surface_loop2])
 
 gmsh.model.geo.synchronize()
 
+gmsh.model.addPhysicalGroup(2, [surface1], name="z_minus")
+gmsh.model.addPhysicalGroup(2, [surface7], name="z_plus")
+gmsh.model.addPhysicalGroup(2, [surface3], name="y_minus")
+gmsh.model.addPhysicalGroup(2, [surface4], name="x_plus")
+gmsh.model.addPhysicalGroup(2, [surface5], name="y_plus")
+gmsh.model.addPhysicalGroup(2, [surface6], name="x_minus")
+
 gmsh.model.addPhysicalGroup(3, [body1], name="body1")
 gmsh.model.addPhysicalGroup(3, [body2], name="body2")
 
