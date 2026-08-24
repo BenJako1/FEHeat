@@ -66,7 +66,9 @@ def apply_gen(T, Q, K, mesh, properties, bc):
 
     for face in nodes:
         type = mesh.physical_groups[bc.boundary]["type"]
-        if type == "T3":
+        if type == "TET4":
+            f = q * tet_volume(mesh.nodes[face]) * np.ones(4) / 4
+        elif type == "T3":
             f = q * properties[bc.body]["t"] * tri_area(mesh.nodes[face]) * np.ones(3) / 3
         elif type == "L2":
             f = q * properties[bc.body]["A"] * properties[bc.body]["t"] * edge_length(mesh.nodes[face]) * np.ones(2) / 2
