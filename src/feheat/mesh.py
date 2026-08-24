@@ -74,9 +74,9 @@ class Mesh:
                     element_type, element_tags, node_tags_for_entity = gmsh.model.mesh.getElements(dim, entity)
                     physical_groups[name]["type"] = INV_ELMENT_TYPES[element_type[0]]
                     _, _, _, num_nodes, _, _ = gmsh.model.mesh.getElementProperties(element_type[0])
-                    elements = np.array(node_tags_for_entity, dtype=np.int64).reshape(-1, num_nodes)
+                    group_elements = np.array(node_tags_for_entity, dtype=np.int64).reshape(-1, num_nodes)
 
-                    physical_groups[name]["elements"] = tag_to_index[elements]
+                    physical_groups[name]["elements"] = tag_to_index[group_elements]
 
             # This is a shitty fix
             elements = tag_to_index[elements]
