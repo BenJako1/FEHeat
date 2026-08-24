@@ -1,0 +1,3 @@
+z_minus:
+  condition: temp
+  args: 0

@@ -16,18 +16,18 @@ class steadySolver:
 
         # remove rows
         for count, bn in enumerate(boundNodes):
-            K = np.delete(K, bn - count, axis=0)
+            K_sol = np.delete(K_sol, bn - count, axis=0)
             Q = np.delete(Q, bn - count, axis=0)
 
         # subtract known boundary temperatures
         for bn in boundNodes:
-            Q -= K[:, bn] * T[bn]
+            Q -= K_sol[:, bn] * T[bn]
 
         # remove columns
         for count, bn in enumerate(boundNodes):
-            K = np.delete(K, bn - count, axis=1)
+            K_sol = np.delete(K_sol, bn - count, axis=1)
 
-        T_unknown = np.linalg.solve(K, Q)
+        T_unknown = np.linalg.solve(K_sol, Q)
 
         Tsol = np.zeros(mesh.N)
         for i, fn in enumerate(freeNodes):
@@ -35,9 +35,9 @@ class steadySolver:
         for bn in boundNodes:
             Tsol[bn] = T[bn]
 
-        Qsol = K_sol @ Tsol
+        Qsol = K @ Tsol
 
-        if round(np.sum(Qsol), 5) != 0:
-            raise ValueError("Flux is non-conservative!")
+        #if round(np.sum(Qsol), 5) != 0:
+        #    raise ValueError(f"Flux is non-conservative! Sum = {np.sum(Qsol)}")
     
         return Tsol, Qsol

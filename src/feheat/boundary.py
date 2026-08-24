@@ -4,6 +4,7 @@ from feheat.utils import edge_length, tri_area, tet_volume
 
 @dataclass
 class BoundaryCondition:
+    body: str
     boundary: str
     condition: str
     args: tuple
@@ -11,21 +12,23 @@ class BoundaryCondition:
 def load_boundary_conditions(data):
     boundary_conditions = []
 
-    for name, bc in data.items():
-        args = bc.get("args", ())
+    for body in data.keys():
+        for name, bc in data[body].items():
+            args = bc.get("args", ())
 
-        if not isinstance(args, (list, tuple)):
-            args = (args,)
-        else:
-            args = tuple(args)
+            if not isinstance(args, (list, tuple)):
+                args = (args,)
+            else:
+                args = tuple(args)
 
-        boundary_conditions.append(
-            BoundaryCondition(
-                boundary=name,
-                condition=bc["condition"],
-                args=args,
+            boundary_conditions.append(
+                BoundaryCondition(
+                    body = body,
+                    boundary = name,
+                    condition = bc["condition"],
+                    args = args,
+                )
             )
-        )
 
     return boundary_conditions
 
@@ -49,13 +52,30 @@ def apply_flux(T, Q, K, mesh, properties, bc):
         if type == "T3":
             f = q * tri_area(mesh.nodes[face]) * np.ones(3) / 3
         elif type == "L2":
-            f = q * properties["t"] * edge_length(mesh.nodes[face]) * np.ones(2) / 2
+            f = q * properties[bc.body]["t"] * edge_length(mesh.nodes[face]) * np.ones(2) / 2
 
-        Q[nodes] += f
+        Q[face] += f
+
+def apply_gen(T, Q, K, mesh, properties, bc):
+    nodes = mesh.physical_groups[bc.boundary]["elements"]
+    
+    q = bc.args[0]
+
+    if len(bc.args) != 1:
+        raise ValueError(f"Generation condition on boundary {bc.boundary} takes only one argument!")
+
+    for face in nodes:
+        type = mesh.physical_groups[bc.boundary]["type"]
+        if type == "T3":
+            f = q * properties[bc.body]["t"] * tri_area(mesh.nodes[face]) * np.ones(3) / 3
+        elif type == "L2":
+            f = q * properties[bc.body]["A"] * properties[bc.body]["t"] * edge_length(mesh.nodes[face]) * np.ones(2) / 2
+        
+        Q[face] += f
 
 def apply_convection(T, Q, K, mesh, properties, bc):
     nodes = mesh.physical_groups[bc.boundary]["elements"]
-    print(bc.args)
+
     h, T_inf = bc.args
     
     if len(bc.args) != 2:
@@ -70,17 +90,18 @@ def apply_convection(T, Q, K, mesh, properties, bc):
                                          [1, 2, 1],
                                          [1, 1, 2]])
         elif type == "L2":
-            A = properties["t"] * edge_length(mesh.nodes[face])
+            A = properties[bc.body]["t"] * edge_length(mesh.nodes[face])
             f = h * T_inf * A * np.ones(2) / 2
             k = (h * A / 6) * np.array([[2, 1],
                                         [1, 2]])
 
-        Q[nodes] += f
+        Q[face] += f
         K[np.ix_(face, face)] += k
 
 BOUNDARY_CONDITIONS = {
     "temp": apply_temperature,
     "flux": apply_flux,
+    "gen": apply_gen,
     "conv": apply_convection
 }
 
@@ -98,7 +119,7 @@ CHAR_CALC = {
     "TET4": tet_volume
 }
 
-def calculate_characteristic(type, coords, properties):
+def calculate_characteristic(type, coords):
     try:
         function = CHAR_CALC[type]
     except KeyError:

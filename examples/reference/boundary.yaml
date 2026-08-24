@@ -1,0 +1,20 @@
+surface:
+  left:
+    condition: flux
+    args: 0.04
+
+  bottom:
+    condition: flux
+    args: 0
+
+  right:
+    condition: conv
+    args: [0.012, 25]
+
+  top:
+    condition: flux
+    args: 0
+
+  surface:
+    condition: gen
+    args: 0.06

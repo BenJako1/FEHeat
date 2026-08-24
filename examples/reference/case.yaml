@@ -1,0 +1,10 @@
+mesh: mesh.msh
+properties: properties.yaml
+boundary_conditions: boundary.yaml
+
+element:
+  type: T3
+
+results:
+  format: vtu
+  filename: results
