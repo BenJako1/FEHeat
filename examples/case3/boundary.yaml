@@ -3,23 +3,7 @@ body1:
     condition: temp
     args: 100
 
-  y_minus:
-    condition: flux
-    args: 0
-
-  y_plus:
-    condition: flux
-    args: 0
-
-  x_minus:
-    condition: flux
-    args: 0
-
-  x_plus:
-    condition: flux
-    args: 0
-
 body2:
   z_plus:
-    condition: conv
-    args: [0.012, 25]
+    condition: temp
+    args: 0
