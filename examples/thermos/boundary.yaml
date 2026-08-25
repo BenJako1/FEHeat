@@ -1,7 +1,7 @@
 body1:
   1_bottom:
     condition: temp
-    args: 100
+    args: 1e2
   
   1_outside:
     condition: conv
@@ -10,4 +10,4 @@ body1:
 body2:
   2_well:
     condition: temp
-    args: -50
+    args: 1e3

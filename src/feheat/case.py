@@ -3,6 +3,7 @@ from pathlib import Path
 from feheat.config import load_config
 from feheat.element import create_element
 from feheat.mesh import Mesh
+from feheat.property import get_properties
 from feheat.assembly import assemble
 from feheat.boundary import load_boundary_conditions, apply_boundary_condition
 from feheat.solver import steadySolver
@@ -24,7 +25,7 @@ class Case:
 
     # Retrieve and apply properties
     def apply_properties(self):
-        self.properties = load_config(self.directory / self.config["properties"])
+        self.properties = get_properties(load_config(self.directory / self.config["properties"]))
 
     # Assemble
     def assemble(self):
