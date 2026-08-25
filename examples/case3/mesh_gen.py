@@ -10,7 +10,7 @@ w = 10
 h1 = 10
 h2 = h1 + 10
 
-lc = 2
+lc = 1
 
 # Add points
 

@@ -1,0 +1,13 @@
+body1:
+  1_bottom:
+    condition: temp
+    args: 100
+  
+  1_outside:
+    condition: conv
+    args: [0.04, 20]
+
+body2:
+  2_well:
+    condition: temp
+    args: -50

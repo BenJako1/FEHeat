@@ -50,31 +50,4 @@ class Case:
         write_data(format, filename, data)
 
 if __name__ == "__main__":
-    import os
-    cwd = os.getcwd()
-    case = Case(cwd)
-    case.load_mesh()
-    case.apply_properties()
-    case.load_element()
-    case.assemble()
-    case.apply_boundary_conditions()
-    case.solve()
-    case.output()
-
-    import matplotlib.pyplot as plt
-    import matplotlib.tri as mtri
-
-    def plot_temp2D(mesh, T, cmap='inferno', colorbar=False):
-        tri = mtri.Triangulation(mesh.nodes[:, 0], mesh.nodes[:, 1], mesh.elements)
-
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        surf = ax.plot_trisurf(tri, T, cmap=cmap)
-        if colorbar:
-            fig.colorbar(surf, ax=ax, shrink=0.6, pad=0.2)
-        ax.set_xlabel('x')
-        ax.set_ylabel('y')
-        ax.set_zlabel('z')
-        plt.show()
-
-    plot_temp2D(case.mesh, case.T)
+    pass

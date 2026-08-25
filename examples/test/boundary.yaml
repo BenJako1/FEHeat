@@ -1,0 +1,8 @@
+body:
+  top:
+    condition: temp
+    args: 100
+  
+  bottom:
+    condition: temp
+    args: 0
